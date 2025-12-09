@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proxmox Homelab | Markus’ Makerspace</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --font-heading: 'JetBrains Mono', monospace;
+            --font-body: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Nav -->
+        <nav class="nav-bar">
+            <a href="../index.html" class="nav-link">← Back to Dashboard</a>
+            <span style="color: var(--border-color);">/</span>
+            <span class="nav-link active">IT & Homelab</span>
+            <span style="color: var(--border-color);">/</span>
+            <span class="nav-link active">Server_01</span>
+        </nav>
+
+        <header class="header">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                <h1 class="header-title" style="margin-bottom: 0;">Proxmox Homelab Core</h1>
+                <span class="status-indicator status-active" title="Status: Active"></span>
+            </div>
+            <p class="header-subtitle">Infrastructure as code, Monitoring & Storage</p>
+        </header>
+
+        <main>
+            <!-- Project Meta / Specs -->
+            <section class="project-meta">
+                <div class="meta-item">
+                    <strong>Hardware</strong>
+                    Intel NUC i7, 32GB RAM, 2TB NVMe
+                </div>
+                <div class="meta-item">
+                    <strong>OS / Hypervisor</strong>
+                    Proxmox VE 8.1
+                </div>
+                <div class="meta-item">
+                    <strong>Services</strong>
+                    Docker, Portainer, Pi-Hole, Wireguard
+                </div>
+                <div class="meta-item">
+                    <strong>Timeline</strong>
+                    Gestartet: Jan 2024 (Ongoing)
+                </div>
+            </section>
+
+            <!-- Content -->
+            <section style="max-width: 800px;">
+                <h2>Das Ziel</h2>
+                <p>
+                    Ablösung verschiedener Einzel-Raspberry Pis durch einen zentralen, leistungsfähigen Hypervisor.
+                    Ziel war eine saubere Trennung von Diensten durch LXC Container und VMs sowie die Reduzierung des
+                    Stromverbrauchs.
+                </p>
+                <br>
+
+                <h3>Netzwerk-Architektur</h3>
+                <p>
+                    Das Netzwerk ist intern über VLANs segmentiert, um IOT-Geräte vom Management-LAN zu trennen.
+                    Als Router/Firewall kommt eine virtualisierte OPNsense Instanz zum Einsatz.
+                </p>
+                <ul style="margin: 1rem 0 1rem 2rem; color: var(--text-muted);">
+                    <li><strong>VLAN 10:</strong> Management (Admin Access)</li>
+                    <li><strong>VLAN 20:</strong> Trusted Devices (PC, Phone)</li>
+                    <li><strong>VLAN 30:</strong> IOT / NoT (No Internet Access)</li>
+                    <li><strong>VLAN 99:</strong> Guest Network</li>
+                </ul>
+
+                <h3>Monitoring Stack</h3>
+                <p>
+                    Überwachung der Infrastruktur erfolgt via Prometheus und Grafana. Node-Exporter läuft auf allen VMs.
+                </p>
+
+                <div class="code-block">
+                    # docker-compose.yml snippet for monitoring
+                    version: '3.8'
+
+                    services:
+                    prometheus:
+                    image: prom/prometheus:latest
+                    container_name: prometheus
+                    ports:
+                    - "9090:9090"
+                    volumes:
+                    - ./prometheus.yml:/etc/prometheus/prometheus.yml
+                    restart: unless-stopped
+
+                    grafana:
+                    image: grafana/grafana:latest
+                    container_name: grafana
+                    ports:
+                    - "3000:3000"
+                    environment:
+                    - GF_SECURITY_ADMIN_PASSWORD=secret
+                    restart: unless-stopped
+                </div>
+
+                <div class="lesson-learned">
+                    <h4>💡 Lesson Learned</h4>
+                    <p>
+                        Backup ist Pflicht! Ein fehlgeschlagenes Proxmox-Update hat mich gelehrt,
+                        dass Snapshots keine externen Backups ersetzen. Jetzt läuft nachts ein Proxmox Backup Server
+                        (PBS) Sync.
+                    </p>
+                </div>
+
+            </section>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Markus Dold.</p>
+        </footer>
+
+    </div>
+
+</body>
+
+</html>

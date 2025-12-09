@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Wetterstation | Markus’ Makerspace</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --font-heading: 'JetBrains Mono', monospace;
+            --font-body: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <nav class="nav-bar">
+            <a href="../index.html" class="nav-link">← Back to Dashboard</a>
+            <span style="color: var(--border-color);">/</span>
+            <span class="nav-link active">Raspberry Pi & Micro</span>
+            <span style="color: var(--border-color);">/</span>
+            <span class="nav-link active">ESP32_WX</span>
+        </nav>
+
+        <header class="header">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                <h1 class="header-title" style="margin-bottom: 0;">Autarke Solar-Wetterstation</h1>
+                <span class="status-indicator status-done" title="Status: Abgeschlossen"></span>
+            </div>
+            <p class="header-subtitle">ESP32 Deep Sleep, MQTT & BME280</p>
+        </header>
+
+        <main>
+            <section class="project-meta">
+                <div class="meta-item">
+                    <strong>MCU</strong>
+                    ESP32 WROOM-32
+                </div>
+                <div class="meta-item">
+                    <strong>Sensors</strong>
+                    BME280 (Temp/Hum/Press)
+                </div>
+                <div class="meta-item">
+                    <strong>Power</strong>
+                    LiPo 18650 + TP4056 + 6V Solar Panel
+                </div>
+                <div class="meta-item">
+                    <strong>Protocol</strong>
+                    MQTT over WiFi
+                </div>
+            </section>
+
+            <section style="max-width: 800px;">
+                <h2>Funktionsweise</h2>
+                <p>
+                    Die Station misst alle 10 Minuten Temperatur, Luftfeuchtigkeit und Luftdruck.
+                    Dazwischen befindet sich der ESP32 im Deep Sleep Modus, um Energie zu sparen.
+                    Die Daten werden per MQTT an den Homelab-Broker gesendet und in InfluxDB gespeichert.
+                </p>
+                <br>
+
+                <h3>Energie-Management</h3>
+                <p>
+                    Der kritischste Teil war der Stromverbrauch. Der ESP32 verbraucht im aktiven WiFi-Modus ca.
+                    150-240mA.
+                    Im Deep Sleep konnte ich dies auf ca. 10µA reduzieren, indem ich die Power-LED entfernt und einen
+                    effizienten LDO-Regler (HT7333) verwendet habe.
+                </p>
+
+                <div class="code-block">
+                    // ESP32 Deep Sleep Implementation (Arduino IDE)
+                    #define uS_TO_S_FACTOR 1000000ULL /* Conversion factor for micro seconds to seconds */
+                    #define TIME_TO_SLEEP 600 /* Time ESP32 will go to sleep (in seconds) */
+
+                    void setup() {
+                    Serial.begin(115200);
+
+                    // 1. WiFi Connect
+                    setup_wifi();
+
+                    // 2. Read Sensors
+                    float temp = bme.readTemperature();
+
+                    // 3. Publish MQTT
+                    client.publish("garden/weather/temp", String(temp).c_str());
+
+                    // 4. Go to Sleep
+                    Serial.println("Going to sleep now");
+                    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+                    esp_deep_sleep_start();
+                    }
+                </div>
+
+                <div class="lesson-learned">
+                    <h4>💡 Lesson Learned</h4>
+                    <p>
+                        Der Standort des Temperatursensors ist entscheidend. Mein erstes Gehäuse hat sich in der Sonne
+                        aufgeheizt (+5°C Fehler).
+                        Lösung: Ein Stevenson-Screen (Lamellenschutzhütte) aus dem 3D-Drucker (weißes PETG) sorgt für
+                        Belüftung.
+                    </p>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Markus Dold.</p>
+        </footer>
+
+    </div>
+
+</body>
+
+</html>

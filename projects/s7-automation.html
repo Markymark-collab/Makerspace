@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S7 Garagentor | Markus’ Makerspace</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --font-heading: 'JetBrains Mono', monospace;
+            --font-body: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <nav class="nav-bar">
+            <a href="../index.html" class="nav-link">← Back to Dashboard</a>
+            <span style="color: var(--border-color);">/</span>
+            <span class="nav-link active">Automation & SPS</span>
+            <span style="color: var(--border-color);">/</span>
+            <span class="nav-link active">PLC_S7</span>
+        </nav>
+
+        <header class="header">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                <h1 class="header-title" style="margin-bottom: 0;">S7-1200 Garagentor-Steuerung</h1>
+                <span class="status-indicator status-active" title="Status: Aktiv"></span>
+            </div>
+            <p class="header-subtitle">Industrielle Steuerungstechnik im Heimeinsatz</p>
+        </header>
+
+        <main>
+            <section class="project-meta">
+                <div class="meta-item">
+                    <strong>Controller</strong>
+                    Siemens SIMATIC S7-1200 CPU 1214C
+                </div>
+                <div class="meta-item">
+                    <strong>Software</strong>
+                    TIA Portal V17
+                </div>
+                <div class="meta-item">
+                    <strong>Language</strong>
+                    FUP (Funktionsplan) / SCL
+                </div>
+                <div class="meta-item">
+                    <strong>Inputs</strong>
+                    Induktive Endschalter, Lichtschranke
+                </div>
+            </section>
+
+            <section style="max-width: 800px;">
+                <h2>Projektbeschreibung</h2>
+                <p>
+                    Die alte Relais-Steuerung des Garagentors war unzuverlässig und bot keine Statusrückmeldung.
+                    Ich habe sie durch eine gebrauchte Industriesteuerung ersetzt, um Logik für Sicherheit und
+                    Beleuchtung flexibel programmieren zu können.
+                </p>
+                <br>
+
+                <h3>Sicherheits-Logik</h3>
+                <p>
+                    Das Tor darf nur schließen, wenn die Lichtschranke frei ist (Input I0.2). Wird die Lichtschranke
+                    während der Fahrt unterbrochen,
+                    stoppt der Motor sofort und reversiert (Fährt wieder auf).
+                </p>
+
+                <div class="code-block">
+                    // SCL Snippet für Reversier-Logik
+                    IF "Lichtschranke_Belegt" AND "Motor_Ab" THEN
+                    // Not-Stopp
+                    "Motor_Ab" := FALSE;
+                    // Wartezeit Timer starten...
+                    "Auto_Reversier_Bit" := TRUE;
+                    END_IF;
+
+                    IF "Auto_Reversier_Bit" AND "Timer_Elapsed" THEN
+                    "Motor_Auf" := TRUE;
+                    END_IF;
+                </div>
+
+                <h3>Visualisierung im Haus</h3>
+                <p>
+                    Über Modbus TCP kommuniziert die S7 mit meinem Home Assistant Dashboard.
+                    So kann ich sehen, ob das Tor offen steht ("Tor_Status_Byte" > 0) und es remote schließen.
+                </p>
+
+                <div class="lesson-learned">
+                    <h4>💡 Lesson Learned</h4>
+                    <p>
+                        24V Logikpegel vertragen sich nicht direkt mit 5V Sensorik oder ESPs.
+                        Optokoppler sind essenziell, um die SPS-Eingänge sauber zu schalten und galvanische Trennung zu
+                        gewährleisten.
+                        Immer auf gemeinsame Masse (GND) achten!
+                    </p>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Markus Dold.</p>
+        </footer>
+
+    </div>
+
+</body>
+
+</html>

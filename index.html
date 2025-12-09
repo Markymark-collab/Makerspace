@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markus’ Makerspace | Lab & Projects</title>
+    <meta name="description"
+        content="Dokumentation privater Heimprojekte aus Elektronik, IT, Automation und Engineering.">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --font-heading: 'JetBrains Mono', monospace;
+            --font-body: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+            <h1 class="header-title">Markus’ Makerspace</h1>
+            <p class="header-subtitle">>_ Exploring Technology, Automation & Engineering</p>
+        </header>
+
+        <!-- Intro -->
+        <section style="margin-bottom: 3rem;">
+            <p style="max-width: 800px; font-size: 1.1rem; color: var(--text-muted);">
+                Willkommen im digitalen Labor. Diese Subdomain dient der reinen Dokumentation meiner privaten
+                Experimente und Projekte.
+                Vom Homelab-Server bis zur SPS-Steuerung – hier halte ich fest, was ich lerne und baue.
+            </p>
+        </section>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">Alle</button>
+            <button class="filter-btn" data-filter="it">🖥️ IT & Homelab</button>
+            <button class="filter-btn" data-filter="pi">🤖 Pi & Micro</button>
+            <button class="filter-btn" data-filter="auto">⚙️ Automation</button>
+            <button class="filter-btn" data-filter="elec">🔌 Elektronik</button>
+            <button class="filter-btn" data-filter="hacks">🧪 Experimente</button>
+        </div>
+
+        <!-- Project Grid -->
+        <div class="project-grid" id="projectGrid">
+
+            <!-- Project 1: Homelab -->
+            <article class="project-card" data-category="it">
+                <a href="projects/homelab-server.html"
+                    style="text-decoration: none; color: inherit; display: flex; flex-direction: column; flex-grow: 1;">
+                    <div class="card-header">
+                        <span>SERVER_01</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-tags">
+                            <span class="tag">Docker</span>
+                            <span class="tag">Network</span>
+                        </div>
+                        <h3 class="card-title">
+                            Proxmox Homelab
+                            <span class="status-indicator status-active" title="Aktiv"></span>
+                        </h3>
+                        <p class="card-desc">
+                            Zentraler Homeserver für Monitoring, Medienserver und Containerisierung mit VLAN
+                            Segmentierung.
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        View Specs &rarr;
+                    </div>
+                </a>
+            </article>
+
+            <!-- Project 2: Weather Station -->
+            <article class="project-card" data-category="pi">
+                <a href="projects/pi-weather.html"
+                    style="text-decoration: none; color: inherit; display: flex; flex-direction: column; flex-grow: 1;">
+                    <div class="card-header">
+                        <span>ESP32_WX</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-tags">
+                            <span class="tag pi">ESP32</span>
+                            <span class="tag electronics">Sensors</span>
+                        </div>
+                        <h3 class="card-title">
+                            Solar Wetterstation
+                            <span class="status-indicator status-done" title="Abgeschlossen"></span>
+                        </h3>
+                        <p class="card-desc">
+                            Autarke ESP32 Wetterstation mit BME280 Sensor, Solar-Ladeschaltung und MQTT Dashboard
+                            Anbindung.
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        View Schematics &rarr;
+                    </div>
+                </a>
+            </article>
+
+            <!-- Project 3: S7 Automation -->
+            <article class="project-card" data-category="auto">
+                <a href="projects/s7-automation.html"
+                    style="text-decoration: none; color: inherit; display: flex; flex-direction: column; flex-grow: 1;">
+                    <div class="card-header">
+                        <span>PLC_S7</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-tags">
+                            <span class="tag automation">S7-1200</span>
+                            <span class="tag automation">Tia Portal</span>
+                        </div>
+                        <h3 class="card-title">
+                            Garagentor Logic
+                            <span class="status-indicator status-active" title="Aktiv"></span>
+                        </h3>
+                        <p class="card-desc">
+                            Industriesteuerung für eine simple Garagentor-Logik inkl. Lichtschranken-Auswertung und
+                            Auto-Close.
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        View Logic &rarr;
+                    </div>
+                </a>
+            </article>
+
+            <!-- Placeholder Project -->
+            <article class="project-card" data-category="hacks">
+                <div class="card-header" style="opacity: 0.5;">
+                    <span>WIP_04</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-tags">
+                        <span class="tag" style="color: grey; background: rgba(255,255,255,0.1)">Python</span>
+                    </div>
+                    <h3 class="card-title">
+                        Neural Net Test
+                        <span class="status-indicator status-planned" title="In Planung"></span>
+                    </h3>
+                    <p class="card-desc">
+                        Erste Gehversuche mit TensorFlow Lite auf dem Raspberry Pi.
+                    </p>
+                </div>
+                <div class="card-footer" style="opacity: 0.5;">
+                    Coming Soon
+                </div>
+            </article>
+
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Markus Dold. <br>
+                <span style="opacity: 0.6; font-size: 0.8em;">Hinweis: Alle Projekte dienen Lern- und
+                    Demonstrationszwecken. Kein kommerzielles Angebot.</span>
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- Simple Filter Script -->
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>
